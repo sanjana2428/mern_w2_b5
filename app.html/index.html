@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhotoShare - Instagram Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #262626;
+        }
+
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #dbdbdb;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 54px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #262626;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            background: #efefef;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            width: 268px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .nav-icon:hover {
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main {
+            margin-top: 54px;
+            padding: 30px 0;
+        }
+
+        .stories {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .stories-container {
+            display: flex;
+            gap: 16px;
+            min-width: max-content;
+        }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .story-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 2px;
+            margin-bottom: 8px;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgb(169, 164, 164);
+            object-fit: cover;
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #262626;
+        }
+
+        /* Posts */
+        .post {
+            background: white;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 12px;
+        }
+
+        .post-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-username {
+            font-weight: 600;
+            font-size: 14px;
+            color: #262626;
+        }
+
+        .post-location {
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .post-options {
+            cursor: pointer;
+            font-size: 16px;
+            color: #262626;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+        }
+
+        .post-actions-left {
+            display: flex;
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.7;
+        }
+
+        .like-btn.liked {
+            color: #ed4956;
+        }
+
+        .post-likes {
+            padding: 0 16px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .post-caption {
+            padding: 0 16px;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .post-username-caption {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .post-comments {
+            padding: 0 16px;
+            font-size: 14px;
+            color: #8e8e8e;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .post-time {
+            padding: 0 16px 16px;
+            font-size: 10px;
+            color: #8e8e8e;
+            text-transform: uppercase;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-bar {
+                display: none;
+            }
+            
+            .container {
+                padding: 0;
+            }
+            
+            .post {
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            .stories {
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hover effects */
+        .post:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .story:hover .story-avatar {
+            transform: scale(1.05);
+            transition: transform 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">📸 PhotoShare</a>
+            <input type="text" class="search-bar" placeholder="Search">
+            <div class="nav-icons">
+                <div class="nav-icon" onclick="showNotification('Home clicked!')">🏠</div>
+                <div class="nav-icon" onclick="showNotification('Messages clicked!')">💬</div>
+                <div class="nav-icon" onclick="showNotification('Add post clicked!')">➕</div>
+                <div class="nav-icon" onclick="showNotification('Explore clicked!')">🧭</div>
+                <div class="nav-icon" onclick="showNotification('Profile clicked!')">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Stories -->
+            <div class="stories">
+                <div class="stories-container">
+                    <div class="story" onclick="viewStory('Your Story')">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop" alt="Your Story">
+                        </div>
+                        <div class="story-username">Your Story</div>
+                    </div>
+                    <div class="story" onclick="viewStory('john_doe')">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop" alt="john_doe">
+                        </div>
+                        <div class="story-username">john_doe</div>
+                    </div>
+                    <div class="story" onclick="viewStory('sarah_wilson')">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop" alt="sarah_wilson">
+                        </div>
+                        <div class="story-username">sarah_wilson</div>
+                    </div>
+                    <div class="story" onclick="viewStory('mike_photo')">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop" alt="mike_photo">
+                        </div>
+                        <div class="story-username">mike_photo</div>
+                    </div>
+                    <div class="story" onclick="viewStory('travel_lover')">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop" alt="travel_lover">
+                        </div>
+                        <div class="story-username">travel_lover</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts -->
+            <div class="posts" id="posts-container">
+                <!-- Post 1 -->
+                <article class="post">
+                    <div class="post-header">
+                        <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop" alt="john_doe" class="post-avatar">
+                        <div class="post-user-info">
+                            <div class="post-username">john_doe</div>
+                            <div class="post-location">New York, NY</div>
+                        </div>
+                        <div class="post-options" onclick="showPostOptions()">⋯</div>
+                    </div>
+                    <img src="https://images.pexels.com/photos/1519088/pexels-photo-1519088.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop" alt="Post" class="post-image">
+                    <div class="post-actions">
+                        <div class="post-actions-left">
+                            <button class="action-btn like-btn" onclick="toggleLike(this)">🤍</button>
+                            <button class="action-btn" onclick="showNotification('Comment clicked!')">💬</button>
+                            <button class="action-btn" onclick="showNotification('Share clicked!')">📤</button>
+                        </div>
+                        <button class="action-btn" onclick="toggleBookmark(this)">🔖</button>
+                    </div>
+                    <div class="post-likes">1,234 likes</div>
+                    <div class="post-caption">
+                        <span class="post-username-caption">john_doe</span>
+                        Beautiful sunset in the city! 🌅 #sunset #newyork #photography
+                    </div>
+                    <div class="post-comments" onclick="showComments()">View all 42 comments</div>
+                    <div class="post-time">2 hours ago</div>
+                </article>
+
+                <!-- Post 2 -->
+                <article class="post">
+                    <div class="post-header">
+                        <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop" alt="sarah_wilson" class="post-avatar">
+                        <div class="post-user-info">
+                            <div class="post-username">sarah_wilson</div>
+                            <div class="post-location">Los Angeles, CA</div>
+                        </div>
+                        <div class="post-options" onclick="showPostOptions()">⋯</div>
+                    </div>
+                    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop" alt="Post" class="post-image">
+                    <div class="post-actions">
+                        <div class="post-actions-left">
+                            <button class="action-btn like-btn" onclick="toggleLike(this)">🤍</button>
+                            <button class="action-btn" onclick="showNotification('Comment clicked!')">💬</button>
+                            <button class="action-btn" onclick="showNotification('Share clicked!')">📤</button>
+                        </div>
+                        <button class="action-btn" onclick="toggleBookmark(this)">🔖</button>
+                    </div>
+                    <div class="post-likes">856 likes</div>
+                    <div class="post-caption">
+                        <span class="post-username-caption">sarah_wilson</span>
+                        Morning coffee vibes ☕️ Starting the day right! #coffee #morning #lifestyle
+                    </div>
+                    <div class="post-comments" onclick="showComments()">View all 23 comments</div>
+                    <div class="post-time">4 hours ago</div>
+                </article>
+
+                <!-- Post 3 -->
+                <article class="post">
+                    <div class="post-header">
+                        <img src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop" alt="mike_photo" class="post-avatar">
+                        <div class="post-user-info">
+                            <div class="post-username">mike_photo</div>
+                            <div class="post-location">San Francisco, CA</div>
+                        </div>
+                        <div class="post-options" onclick="showPostOptions()">⋯</div>
+                    </div>
+                    <img src="https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop" alt="Post" class="post-image">
+                    <div class="post-actions">
+                        <div class="post-actions-left">
+                            <button class="action-btn like-btn liked" onclick="toggleLike(this)">❤️</button>
+                            <button class="action-btn" onclick="showNotification('Comment clicked!')">💬</button>
+                            <button class="action-btn" onclick="showNotification('Share clicked!')">📤</button>
+                        </div>
+                        <button class="action-btn" onclick="toggleBookmark(this)">🔖</button>
+                    </div>
+                    <div class="post-likes">2,103 likes</div>
+                    <div class="post-caption">
+                        <span class="post-username-caption">mike_photo</span>
+                        Golden Gate Bridge never gets old 🌉 #goldengatebridge #sanfrancisco #photography #travel
+                    </div>
+                    <div class="post-comments" onclick="showComments()">View all 67 comments</div>
+                    <div class="post-time">6 hours ago</div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Like functionality
+        function toggleLike(button) {
+            const isLiked = button.classList.contains('liked');
+            const post = button.closest('.post');
+            const likesElement = post.querySelector('.post-likes');
+            let likesCount = parseInt(likesElement.textContent.replace(/[^\d]/g, ''));
+            
+            if (isLiked) {
+                button.classList.remove('liked');
+                button.textContent = '🤍';
+                likesCount--;
+            } else {
+                button.classList.add('liked');
+                button.textContent = '❤️';
+                likesCount++;
+                
+                // Add a little animation
+                button.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 200);
+            }
+            
+            likesElement.textContent = `${likesCount.toLocaleString()} likes`;
+        }
+
+        // Bookmark functionality
+        function toggleBookmark(button) {
+            const isBookmarked = button.textContent === '🔗';
+            button.textContent = isBookmarked ? '🔖' : '🔗';
+            showNotification(isBookmarked ? 'Removed from saved' : 'Saved to collection');
+        }
+
+        // Story viewing
+        function viewStory(username) {
+            showNotification(`Viewing ${username}'s story`);
+        }
+
+        // Show comments
+        function showComments() {
+            showNotification('Comments feature coming soon!');
+        }
+
+        // Show post options
+        function showPostOptions() {
+            const options = ['Report', 'Unfollow', 'Copy Link', 'Cancel'];
+            const choice = prompt('Choose an option:\n' + options.map((opt, i) => `${i + 1}. ${opt}`).join('\n'));
+            if (choice && choice >= 1 && choice <= options.length) {
+                showNotification(`${options[choice - 1]} selected`);
+            }
+        }
+
+        // Notification system
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                background: #262626;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 1000;
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Search functionality
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            if (e.target.value.length > 0) {
+                showNotification(`Searching for "${e.target.value}"`);
+            }
+        });
+
+        // Infinite scroll simulation
+        let postCount = 3;
+        window.addEventListener('scroll', function() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+                loadMorePosts();
+            }
+        });
+
+        function loadMorePosts() {
+            if (postCount >= 10) return; // Limit to prevent too many posts
+            
+            const postsContainer = document.getElementById('posts-container');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><div class="loading"></div></div>';
+            postsContainer.appendChild(loadingDiv);
+
+            setTimeout(() => {
+                postsContainer.removeChild(loadingDiv);
+                
+                const newPost = createNewPost();
+                postsContainer.appendChild(newPost);
+                postCount++;
+            }, 1500);
+        }
+
+        function createNewPost() {
+            const users = [
+                { name: 'travel_lover', avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop', location: 'Paris, France' },
+                { name: 'foodie_life', avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop', location: 'Tokyo, Japan' },
+                { name: 'nature_shots', avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&fit=crop', location: 'Yosemite, CA' }
+            ];
+            
+            const images = [
+                'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+                'https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+                'https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop'
+            ];
+
+            const captions = [
+                'Amazing view from the top! 🏔️ #adventure #travel #nature',
+                'Delicious meal at this hidden gem 🍜 #food #foodie #yummy',
+                'Nature never ceases to amaze me 🌲 #nature #photography #peaceful'
+            ];
+
+            const randomUser = users[Math.floor(Math.random() * users.length)];
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+            const randomCaption = captions[Math.floor(Math.random() * captions.length)];
+            const randomLikes = Math.floor(Math.random() * 2000) + 100;
+            const randomComments = Math.floor(Math.random() * 50) + 5;
+
+            const post = document.createElement('article');
+            post.className = 'post';
+            post.innerHTML = `
+                <div class="post-header">
+                    <img src="${randomUser.avatar}" alt="${randomUser.name}" class="post-avatar">
+                    <div class="post-user-info">
+                        <div class="post-username">${randomUser.name}</div>
+                        <div class="post-location">${randomUser.location}</div>
+                    </div>
+                    <div class="post-options" onclick="showPostOptions()">⋯</div>
+                </div>
+                <img src="${randomImage}" alt="Post" class="post-image">
+                <div class="post-actions">
+                    <div class="post-actions-left">
+                        <button class="action-btn like-btn" onclick="toggleLike(this)">🤍</button>
+                        <button class="action-btn" onclick="showNotification('Comment clicked!')">💬</button>
+                        <button class="action-btn" onclick="showNotification('Share clicked!')">📤</button>
+                    </div>
+                    <button class="action-btn" onclick="toggleBookmark(this)">🔖</button>
+                </div>
+                <div class="post-likes">${randomLikes.toLocaleString()} likes</div>
+                <div class="post-caption">
+                    <span class="post-username-caption">${randomUser.name}</span>
+                    ${randomCaption}
+                </div>
+                <div class="post-comments" onclick="showComments()">View all ${randomComments} comments</div>
+                <div class="post-time">${Math.floor(Math.random() * 12) + 1} hours ago</div>
+            `;
+
+            return post;
+        }
+
+        // Welcome message
+        setTimeout(() => {
+            showNotification('Welcome to PhotoShare! 📸');
+        }, 1000);
+    </script>
+</body>
+</html>
